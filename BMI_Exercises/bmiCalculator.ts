@@ -3,7 +3,7 @@ interface inputValues {
     weight: number;
   }
 
-const calculateBmi = (height: number, weight: number ) => {
+export const calculateBmi = (height: number, weight: number ) => {
     let bmi = weight / ((height/100) ** 2)
     switch ( true ) {
         case (bmi < 16) : 
