@@ -6,7 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-const PORT = 3000;
+const cors = require('cors');
+app.use(cors());
+const PORT = 3001;
 app.get('/ping', (_req, res) => {
     console.log('someone pinged here');
     res.send('pong');
