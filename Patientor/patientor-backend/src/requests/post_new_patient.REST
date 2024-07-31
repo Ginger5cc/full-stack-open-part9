@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/patients HTTP/1.1
+content-type: application/json
+
+{
+    "name" : "Chan Lenon",
+    "dateOfBirth": "1990-03-03",
+    "ssn": "090123-456X",
+    "gender": "male",
+    "occupation": "Happy World"
+}
