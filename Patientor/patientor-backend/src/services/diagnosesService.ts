@@ -1,9 +1,9 @@
-import diagnosesEntries from '../data/diagnoses';
+import diagnoses from '../data/diagnoses';
 
-import { DiagnosesEntry } from '../types';
+import { Diagnosis } from '../types';
 
-const getDiagnoses = (): DiagnosesEntry[] => {
-  return diagnosesEntries;
+const getDiagnoses = (): Diagnosis[] => {
+  return diagnoses;
 };
 
 const addDiagnoses = () => {

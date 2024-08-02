@@ -1,0 +1,12 @@
+POST http://localhost:3001/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries HTTP/1.1
+content-type: application/json
+
+{
+    "type": "Hospital",
+    "description": "testing",
+    "date": "2021-09-10",
+    "diagnosisCodes": ["S62.5"],
+    "specialist": "00",
+    "dischargeDate": "2020-10-05",
+    "dischargeCriteria" : "happy"
+}
