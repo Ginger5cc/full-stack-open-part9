@@ -3,6 +3,9 @@ import { useState, SyntheticEvent } from "react";
 import {  TextField, Container, Grid, Button } from '@mui/material';
 import type { EntryWithoutId, Diagnosis } from "../../types";
 import { Divider, Alert } from '@mui/material';
+import InputLabel from '@mui/material/InputLabel';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 interface Props {
   patientId: string
@@ -17,8 +20,12 @@ const AddHealthCheckForm = ( {patientId, submitNewEntry, error, setShowTab }: Pr
     const [diagnosisCodes, setDiagnosisCodes] = useState('');
     const [description, setDescription] = useState('');
     const [healthCheckRating, setHealthCheckRating] = useState('');
+
+    const handleChange = (event: SelectChangeEvent) => {
+      setHealthCheckRating(event.target.value);
+    };
     
-    const addHospitalEntry = (event: SyntheticEvent) => {
+    const addHealthCheckEntry = (event: SyntheticEvent) => {
       
       event.preventDefault();
       let diagnosisArray : Array<Diagnosis['code']> = [];
@@ -45,7 +52,7 @@ const AddHealthCheckForm = ( {patientId, submitNewEntry, error, setShowTab }: Pr
             <div><b>New Health Check Entry</b></div>
             <Divider/>
             {error && <Alert severity="error">{error}</Alert>}
-          <form onSubmit={addHospitalEntry}>
+          <form onSubmit={ addHealthCheckEntry}>
           <TextField
               label="Description"
               margin="normal"
@@ -77,15 +84,21 @@ const AddHealthCheckForm = ( {patientId, submitNewEntry, error, setShowTab }: Pr
               onChange={({ target }) => setDiagnosisCodes(target.value)}
             />
             
-            <TextField
-              label="Health Check Rating"
-              placeholder="0 or 1 or 2 or 3"
-              margin="normal"
+            <InputLabel id="healthCheckRating">Health Check Rating</InputLabel>
+            <Select
               fullWidth
+              labelId="healthCheckRating"
+              id="healthCheckRating"
               value={healthCheckRating}
-              onChange={({ target }) => setHealthCheckRating(target.value)}
-            />
-            
+              label="Health Check Rating"
+              onChange={handleChange}
+            >
+              <MenuItem value={0}>0</MenuItem>
+              <MenuItem value={1}>1</MenuItem>
+              <MenuItem value={2}>2</MenuItem>
+              <MenuItem value={3}>3</MenuItem>
+            </Select>
+  
             <Grid>
                 <Grid item>
                     <Button

@@ -4,6 +4,7 @@ import {  TextField, Container, Grid, Button } from '@mui/material';
 import type { EntryWithoutId, Diagnosis } from "../../types";
 import { Divider, Alert } from '@mui/material';
 
+
 interface Props {
   patientId: string
   submitNewEntry : (id: string, value: EntryWithoutId) => void
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const AddHospitalForm = ( {patientId, submitNewEntry, error, setShowTab }: Props ) => {
+    
     const [date, setDate] = useState('');
     const [specialist, setSpecialist] = useState('');
     const [diagnosisCodes, setDiagnosisCodes] = useState('');
@@ -19,6 +21,8 @@ const AddHospitalForm = ( {patientId, submitNewEntry, error, setShowTab }: Props
     const [dischargeDate, setDischargeDate] = useState('');
     const [dischargeCriteria, setDischargeCriteria] = useState('');
     
+    
+
     const addHospitalEntry = (event: SyntheticEvent) => {
       
       event.preventDefault();
