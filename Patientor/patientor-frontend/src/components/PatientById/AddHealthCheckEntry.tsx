@@ -54,11 +54,12 @@ const AddHealthCheckForm = ( {patientId, submitNewEntry, error, setShowTab }: Pr
               onChange={({ target }) => setDescription(target.value)}
             />
             <TextField
-              label="Date"
-              placeholder="YYYY-MM-DD"
+              label='Date'
+              type="date"
               margin="normal"
               fullWidth 
               value={date}
+              InputLabelProps={{ shrink: true }} 
               onChange={({ target }) => setDate(target.value)}
             />
             <TextField

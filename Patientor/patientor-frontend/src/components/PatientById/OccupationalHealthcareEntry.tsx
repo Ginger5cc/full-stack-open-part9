@@ -1,15 +1,20 @@
 import type { Diagnosis, OccupationalHealthcareEntry } from "../../types";
 
 const OccupationalHealthCareEntry = ( {entry, diagnoses} : {entry: OccupationalHealthcareEntry; diagnoses: Diagnosis[]}) => {
-    if (entry.diagnosisCodes) {
+    if (entry.diagnosisCodes && entry.diagnosisCodes.length !== 0)  {
         return (
             <div>
                 <div><b>{entry.date} Health Check</b></div>
                 <div><i>{entry.description}</i></div>
                 <ul>
                 {entry.diagnosisCodes.map( n => {
-                    const diagnosis = diagnoses.find( item => item.code === n);
-                    return <li key={n}>{n} {diagnosis?.name}</li>;
+                    if (n === '')
+                        return null;
+                    else {
+                        const diagnosis = diagnoses.find( item => item.code === n);
+                        return <li key={n}>{n} {diagnosis?.name}</li>;
+                    }
+                
                 } )}
                 </ul>
                 <div>Employer: {entry.employerName}</div>

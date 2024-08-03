@@ -29,17 +29,22 @@ const AddOccupationalForm = ( {patientId, submitNewEntry, error, setShowTab }: P
       } else if (diagnosisCodes !== '') {
         diagnosisArray.push(diagnosisCodes);
       }
-      const newEntry:EntryWithoutId = {
+      let newEntry:EntryWithoutId = {
         type: "OccupationalHealthcare",
         date,
         specialist,
         diagnosisCodes: diagnosisArray,
         description,
         employerName,
-        sickLeave : {startDate: startDate,
-        endDate: endDate}
       };
-      console.log(newEntry);
+      if (startDate !== '' && endDate !== '') {
+        newEntry = {
+          ...newEntry,
+          sickLeave : {startDate: startDate,
+            endDate: endDate}
+        };
+      }
+    
       submitNewEntry(patientId, newEntry);
     };
 
@@ -59,7 +64,8 @@ const AddOccupationalForm = ( {patientId, submitNewEntry, error, setShowTab }: P
             />
             <TextField
               label="Date"
-              placeholder="YYYY-MM-DD"
+              type='date'
+              InputLabelProps={{ shrink: true }} 
               margin="normal"
               fullWidth 
               value={date}
@@ -88,7 +94,8 @@ const AddOccupationalForm = ( {patientId, submitNewEntry, error, setShowTab }: P
             />
             <TextField
               label="Sick Leave Start Date"
-              placeholder="YYYY-MM-DD"
+              type='date'
+              InputLabelProps={{ shrink: true }} 
               margin="normal"
               fullWidth
               value={startDate}
@@ -96,7 +103,8 @@ const AddOccupationalForm = ( {patientId, submitNewEntry, error, setShowTab }: P
             />
             <TextField
               label="Sick Leave End Date"
-              placeholder="YYYY-MM-DD"
+              type='date'
+              InputLabelProps={{ shrink: true }} 
               margin="normal"
               fullWidth
               value={endDate}

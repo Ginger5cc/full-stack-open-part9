@@ -57,7 +57,8 @@ const AddHospitalForm = ( {patientId, submitNewEntry, error, setShowTab }: Props
             />
             <TextField
               label="Date"
-              placeholder="YYYY-MM-DD"
+              type='date'
+              InputLabelProps={{ shrink: true }} 
               margin="normal"
               fullWidth 
               value={date}
@@ -80,7 +81,8 @@ const AddHospitalForm = ( {patientId, submitNewEntry, error, setShowTab }: Props
             
             <TextField
               label="Discharge Date"
-              placeholder="YYYY-MM-DD"
+              type='date'
+              InputLabelProps={{ shrink: true }} 
               margin="normal"
               fullWidth
               value={dischargeDate}
