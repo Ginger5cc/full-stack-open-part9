@@ -1,20 +1,22 @@
 import { useState, SyntheticEvent } from "react";
 
 import {  TextField, Container, Grid, Button } from '@mui/material';
-import type { EntryWithoutId, HospitalEntry, Diagnosis } from "../../types";
+import type { EntryWithoutId, Diagnosis } from "../../types";
+import { Divider, Alert } from '@mui/material';
 
 interface Props {
   patientId: string
   submitNewEntry : (id: string, value: EntryWithoutId) => void
+  error? : string
+  setShowTab: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const AddEntryForm = ( {patientId, submitNewEntry }: Props ) => {
+const AddHealthCheckForm = ( {patientId, submitNewEntry, error, setShowTab }: Props ) => {
     const [date, setDate] = useState('');
     const [specialist, setSpecialist] = useState('');
     const [diagnosisCodes, setDiagnosisCodes] = useState('');
     const [description, setDescription] = useState('');
-    const [dischargeDate, setDischargeDate] = useState('');
-    const [dischargeCriteria, setDischargeCriteria] = useState('');
+    const [healthCheckRating, setHealthCheckRating] = useState('');
     
     const addHospitalEntry = (event: SyntheticEvent) => {
       
@@ -26,23 +28,31 @@ const AddEntryForm = ( {patientId, submitNewEntry }: Props ) => {
         diagnosisArray.push(diagnosisCodes);
       }
       const newEntry:EntryWithoutId = {
-        type: "Hospital",
+        type: "HealthCheck",
         date,
         specialist,
         diagnosisCodes: diagnosisArray,
         description,
-        discharge : {date: dischargeDate,
-        criteria: dischargeCriteria}
+        healthCheckRating: Number(healthCheckRating)
       };
       console.log(newEntry);
       submitNewEntry(patientId, newEntry);
     };
 
     return (
-        <Container>
+        <Container maxWidth="xs">
             <br/>
-            <div><b>New Hospital Entry</b></div>
+            <div><b>New Health Check Entry</b></div>
+            <Divider/>
+            {error && <Alert severity="error">{error}</Alert>}
           <form onSubmit={addHospitalEntry}>
+          <TextField
+              label="Description"
+              margin="normal"
+              fullWidth
+              value={description}
+              onChange={({ target }) => setDescription(target.value)}
+            />
             <TextField
               label="Date"
               placeholder="YYYY-MM-DD"
@@ -65,28 +75,16 @@ const AddEntryForm = ( {patientId, submitNewEntry }: Props ) => {
               value={diagnosisCodes}
               onChange={({ target }) => setDiagnosisCodes(target.value)}
             />
+            
             <TextField
-              label="Description"
+              label="Health Check Rating"
+              placeholder="0 or 1 or 2 or 3"
               margin="normal"
               fullWidth
-              value={description}
-              onChange={({ target }) => setDescription(target.value)}
+              value={healthCheckRating}
+              onChange={({ target }) => setHealthCheckRating(target.value)}
             />
-            <TextField
-              label="Discharge Date"
-              placeholder="YYYY-MM-DD"
-              margin="normal"
-              fullWidth
-              value={dischargeDate}
-              onChange={({ target }) => setDischargeDate(target.value)}
-            />
-            <TextField
-              label="Discharge Criteria"
-              margin="normal"
-              fullWidth
-              value={dischargeCriteria}
-              onChange={({ target }) => setDischargeCriteria(target.value)}
-            />
+            
             <Grid>
                 <Grid item>
                     <Button
@@ -94,6 +92,7 @@ const AddEntryForm = ( {patientId, submitNewEntry }: Props ) => {
                     variant="contained"
                     style={{ float: "left" }}
                     type="button"
+                    onClick={ () => setShowTab(false)}
                     >
                     Cancel
                     </Button>
@@ -114,4 +113,4 @@ const AddEntryForm = ( {patientId, submitNewEntry }: Props ) => {
         </Container>
       );
 };
-export default AddEntryForm;
+export default AddHealthCheckForm;

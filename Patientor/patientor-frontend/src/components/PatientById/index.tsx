@@ -8,9 +8,9 @@ import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import ShowEntry from './Entry';
 import { Button } from '@mui/material';
-import AddEntryForm from './AddEntryForm';
 
 import axios from 'axios';
+import TabPanel from './TabPanel';
 interface Props {
   diagnoses: Diagnosis[]
   patients : Patient[]
@@ -19,7 +19,7 @@ interface Props {
   
   const PatientById = ({ setPatients, diagnoses, patients } : Props) => {
     const [patient, setPatient] = useState<Patient>();
-    const [showHospitalEntry, setShowHospitalEntry] = useState(false);
+    const [showTab, setShowTab] = useState(false);
     const [error, setError] = useState<string>();
     const id = useParams().id;
 
@@ -42,7 +42,7 @@ interface Props {
         patient.entries = patient.entries.concat(entry);
         const newPatients = patients.map( n => n.id === id? patient: n);
         setPatients(newPatients);
-        setShowHospitalEntry(false);
+        setShowTab(false);
       } catch (e: unknown) {
         if (axios.isAxiosError(e)) {
           if (e?.response?.data && typeof e?.response?.data === "string") {
@@ -71,12 +71,11 @@ interface Props {
           size="small" 
           variant="contained" 
           color="primary"
-          onClick={() => setShowHospitalEntry(prev => !prev)}
+          onClick={() => setShowTab(prev => !prev)}
         >
             Add New Entry
         </Button>
-        
-        {showHospitalEntry && <AddEntryForm patientId={patient.id} submitNewEntry={submitNewEntry}/>}
+        {showTab && <TabPanel patientId={patient.id} submitNewEntry={submitNewEntry} error={error} setShowTab={setShowTab}/>}
         <br />
         <br />
         <h3>Entries</h3>
