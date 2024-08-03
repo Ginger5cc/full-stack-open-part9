@@ -2,45 +2,85 @@ import {
     useParams
   } from 'react-router-dom';
 import patientService from "../../services/patients";
-import { Patient } from '../../types';
-import { useState } from 'react';
+import { Patient, type Diagnosis, type EntryWithoutId } from '../../types';
+import { useState, useEffect } from 'react';
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
+import ShowEntry from './Entry';
+import { Button } from '@mui/material';
+import AddEntryForm from './AddEntryForm';
 
+import axios from 'axios';
+interface Props {
+  diagnoses: Diagnosis[]
+  patients : Patient[]
+  setPatients: React.Dispatch<React.SetStateAction<Patient[]>>
+}
   
-  const PatientById = () => {
+  const PatientById = ({ setPatients, diagnoses, patients } : Props) => {
     const [patient, setPatient] = useState<Patient>();
+    const [showHospitalEntry, setShowHospitalEntry] = useState(false);
+    const [error, setError] = useState<string>();
     const id = useParams().id;
-    const getPatient = async(id:string) => {
+
+    useEffect ( () => {
+      const fetchPatient = async (id:string) => {
         const newpatient = await patientService.getPatientById(id);
         return setPatient(newpatient);
-    };
-    if (id) {
-      getPatient(id);
-    }
-    
+      };
+      if (id) {
+        fetchPatient(id);
+      }
+    }, [id]);
+
     if (!patient)
       return null;
 
-    const showGender = (gender: string) => {
-      switch (true) {
-        case (gender === 'female') :
-          return <FemaleIcon />;
-        case (gender === 'male') :
-          return <MaleIcon />;
-        case (gender === 'other') :
-            return <div>Gender: Other</div>;
-          default:
-              break;
+    const submitNewEntry = async (id: string, values: EntryWithoutId) => {
+      try {
+        const entry = await patientService.createEntry(id, values);
+        patient.entries = patient.entries.concat(entry);
+        const newPatients = patients.map( n => n.id === id? patient: n);
+        setPatients(newPatients);
+        setShowHospitalEntry(false);
+      } catch (e: unknown) {
+        if (axios.isAxiosError(e)) {
+          if (e?.response?.data && typeof e?.response?.data === "string") {
+            const message = e.response.data.replace('Something went wrong. Error: ', '');
+            console.error(message);
+            setError(message);
+          } else {
+            setError("Unrecognized axios error");
+          }
+        } else {
+          console.error("Unknown error", e);
+          setError("Unknown error");
+        }
       }
     };
+
     
     return (
       <div>
         <h2>{patient.name}</h2>
-        {showGender(patient.gender)}
+        {patient.gender ==='other'? <div>Gender: Other</div> : (patient.gender ==='female'? <FemaleIcon /> : <MaleIcon />)}
         <div>ssn: {patient.ssn}</div>
         <div>occupation: {patient.occupation}</div>
+        <br/>
+        <Button 
+          size="small" 
+          variant="contained" 
+          color="primary"
+          onClick={() => setShowHospitalEntry(prev => !prev)}
+        >
+            Add New Entry
+        </Button>
+        
+        {showHospitalEntry && <AddEntryForm patientId={patient.id} submitNewEntry={submitNewEntry}/>}
+        <br />
+        <br />
+        <h3>Entries</h3>
+        {patient.entries.length != 0 ? patient.entries.map( n => <ShowEntry key={n.id} diagnoses={diagnoses} entry={n} />) : <div >No Entry yet</div>}
       </div>
     );
   };

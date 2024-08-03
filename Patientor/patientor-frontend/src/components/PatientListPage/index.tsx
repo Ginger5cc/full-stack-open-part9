@@ -9,10 +9,7 @@ import HealthRatingBar from "../HealthRatingBar";
 
 import patientService from "../../services/patients";
 
-import {
-  Routes, Route, Link
-} from 'react-router-dom';
-import PatientById from "../PatientById";
+import { Link } from 'react-router-dom';
 
 interface Props {
   patients : Patient[]
@@ -52,6 +49,8 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
     }
   };
 
+  console.log('patientlist');
+
   return (
     <div className="App">
       <Box>
@@ -77,7 +76,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
               <TableCell>{patient.gender}</TableCell>
               <TableCell>{patient.occupation}</TableCell>
               <TableCell>
-                <HealthRatingBar showText={false} rating={1} />
+                <HealthRatingBar showText={false} rating={0} />
               </TableCell>
             </TableRow>
           ))}
