@@ -1,4 +1,4 @@
-import { NewPatientEntry, Gender, EntryWithoutId, Diagnosis, HealthCheckRating } from './types';
+import { NewPatientEntry, Gender, EntryWithoutId, Diagnosis, HealthCheckRating, type Discharge, type Sickleave } from './types';
 
 const isString = (text: unknown): text is string => {
     return typeof text === 'string' || text instanceof String;
@@ -124,6 +124,31 @@ export const toNewEntry = (object: unknown): EntryWithoutId => {
     
 }; 
 
+
+const parseSickLeave = ( sickleave: unknown ):Sickleave => {
+    if (!sickleave || typeof sickleave !== 'object' 
+        || !("startDate" in sickleave) || !("endDate" in sickleave)) {
+            throw new Error('Incorrect or missing data in Sick Leave');
+        }
+        const newSickLeave: Sickleave = {
+            startDate: parseDate(sickleave.startDate, "Sick Leave Start Date"),
+            endDate: parseDate(sickleave.endDate, "Sick Leave End Date")
+        };
+        return newSickLeave;
+};
+
+const parseDischarge = ( discharge: unknown ):Discharge => {
+    if (!discharge || typeof discharge !== 'object' 
+        || !("date" in discharge) || !("criteria" in discharge)) {
+            throw new Error('Incorrect or missing data in Discharge');
+        }
+        const newDischarge: Discharge = {
+            date: parseDate(discharge.date, "Discharge Date"),
+            criteria: parseField(discharge.criteria, "Discharge Criteria")
+        };
+        return newDischarge;
+};
+
 const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> =>  {
     if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
       // we will just trust the data to be in correct form
@@ -153,15 +178,15 @@ const checkHealthCheck = (object: object): EntryWithoutId => {
 };
 
 const checkHospital = (object: object): EntryWithoutId => {
-    if ("date" in object && "type" in object && "description" in object && "specialist" in object && "dischargeDate" in object && "dischargeCriteria" in object) {
-        const newEntry: EntryWithoutId = 
+    if ("date" in object && "type" in object && "description" in object && "specialist" in object && "discharge" in object) {
+        const newEntry: EntryWithoutId =
             {
                 type: "Hospital",
                 description: parseField(object.description, "description"),
                 date: parseDate(object.date, "date"),
                 diagnosisCodes: parseDiagnosisCodes(object),
                 specialist: parseField(object.specialist, "specialist"),
-                discharge : {date: parseDate(object.dischargeDate, "Discharge Date"), criteria: parseField(object.dischargeCriteria, "Discharge Criteria")}
+                discharge : parseDischarge(object.discharge)
             };
         return newEntry;
     }
@@ -181,10 +206,10 @@ const checkOccupationalHealthcare = (object: object): EntryWithoutId => {
                 employerName: parseField(object.employerName, "employerName"),
 
             };
-        if ("startDate" in object && "endDate" in object) {
+        if ("sickLeave" in object) {
             newEntry = {
                 ...newEntry,
-                sickLeave: {startDate: parseDate(object.startDate, "Sick Leave Start Date"), endDate: parseDate(object.endDate, "Sick Leave End Date")}
+                sickLeave: parseSickLeave(object.sickLeave)
             };
         }
         return newEntry;
