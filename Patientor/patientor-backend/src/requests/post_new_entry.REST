@@ -2,14 +2,10 @@ POST http://localhost:3001/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/ent
 content-type: application/json
 
 {
-    "type": "OccupationalHealthcare",
+    "type": "HealthCheck",
     "description": "testing",
     "date": "2021-09-10",
     "diagnosisCodes": ["S62.5"],
-    "specialist": "MD",
-    "employerName": "FBI",
-    "sickLeave": {
-        "startDate": "2019-10-05",
-        "endDate": "2019-10-28"
-      }
+    "specialist": "MDDD FOng",
+    "healthCheckRating": 0
 }

@@ -90,18 +90,27 @@ const parseField = (field: unknown, fieldname: string): string => {
 
 
 const isRating = (rating: number): rating is HealthCheckRating => {
+    console.log(Object.values(HealthCheckRating));
     return Object.values(HealthCheckRating).includes(rating);
 };
     
+const isNumber = (rating: unknown) => {
+    console.log('isNumber', typeof rating === 'number');
+    return typeof rating === 'number';
+  };
 
-
-const parseHealthCheckRating = ( rating: unknown ): HealthCheckRating => {
-    const num_rating = Number(rating);
-    if (!rating || isNaN (num_rating) || !isRating(num_rating)) {
-        throw new Error('Incorrect or missing Health Check Rating: ' + rating);
+const parseHealthCheckRating = ( rating: unknown ): HealthCheckRating => {   if (rating === 0 ) {
+        return rating;  
     }
-    return num_rating;
-    };
+    if ( !rating || !isNumber(rating)) {
+        console.log(rating);
+        throw new Error('Incorrect or missing Health Check Rating: ' + rating);
+    } else if ( isRating(rating)) {
+        return rating;
+    }
+    throw new Error('Incorrect or missing Health Check Rating: ' + rating);
+};
+    
 
 
 export const toNewEntry = (object: unknown): EntryWithoutId => {
